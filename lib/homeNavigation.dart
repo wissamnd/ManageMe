@@ -27,15 +27,15 @@ class _HomeState extends State<Nav> {
         items: [
           new BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title:Text("Home"),
+            title:Text("الصفحة الرئيسية"),
           ),
           new BottomNavigationBarItem(
             icon: Icon(Icons.mail),
-            title: Text("Messeges"),
+            title: Text("الرسائل"),
           ),
           new BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            title: Text("Profile"),
+            title: Text("الملف الشخصي"),
           )
         ],
       ),
