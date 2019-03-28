@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'homeScreen.dart';
+import 'profileScreen.dart';
 import 'calculator_widget.dart';
+
 
 class Nav extends StatefulWidget {
   @override
@@ -14,7 +16,7 @@ class _HomeState extends State<Nav> {
   final List<Widget> _children = [
     HomeScreen(),
     Calculator(),
-    Calculator(),
+    Profile(),
   ];
 
   @override

@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:ManageMe/User.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'Login/Logger.dart';
+import 'User.dart';
+
+
 
 class HomeScreen extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,8 +21,7 @@ class HomeScreen extends StatelessWidget {
         body:Container(
             child:Column(
               children: <Widget>[
-                Dash()
-
+                Dash(),
               ],
             )
         )
@@ -22,7 +29,10 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+
+
 class Dash extends StatelessWidget{
+
   @override
   Widget build(BuildContext context) {
     return new AspectRatio(
@@ -44,8 +54,8 @@ class Dash extends StatelessWidget{
                   ),
                 ),
                 Positioned(
-                  right: 50.0,
-                  top: 100.0,
+                  right: (MediaQuery.of(context).size.width)/9.5,
+                  top: (MediaQuery.of(context).size.height)/6,
                   child: Column(
                     children: <Widget>[
                       Text("الفاتورة",style: TextStyle(fontSize: 30, color:Color.fromRGBO(101, 127, 172, 1).withOpacity(0.5), ),),
@@ -70,8 +80,6 @@ class Dash extends StatelessWidget{
               ],
             )
         )
-
-
     );
   }
 }
@@ -97,3 +105,8 @@ getCurrentMonth(){
   var now = DateTime.now();
   return monthLst[now.month - 1];
 }
+
+
+
+
+
