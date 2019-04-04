@@ -10,11 +10,6 @@ void main() {
   FirebaseAuth.instance.currentUser().then((user){
     if(user != null){
       runApp(new MaterialApp(
-        theme: ThemeData(
-          brightness: Brightness.light,
-          primaryColor: Color.fromRGBO(101, 127, 172, 1),
-          accentColor: Color.fromRGBO(101, 127, 172, 1),
-        ),
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
     routes: <String, WidgetBuilder>{
@@ -23,11 +18,6 @@ void main() {
       ));
     }else{
       runApp(new MaterialApp(
-        theme: ThemeData(
-          brightness: Brightness.light,
-          primaryColor: Color.fromRGBO(101, 127, 172, 1),
-          accentColor: Color.fromRGBO(101, 127, 172, 1),
-        ),
         debugShowCheckedModeBanner: false,
         home: log,
       ));

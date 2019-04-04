@@ -11,6 +11,7 @@ buildscript {
 }
 
 allprojects {
+
     repositories {
         google()
         jcenter()
@@ -28,4 +29,14 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
+//added this line to fix the issue with image picker
+subprojects {
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && !details.requested.name.contains('multidex') ) {
+                details.useVersion "26.1.0"
+            }
+        }
+    }
+}

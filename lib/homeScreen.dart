@@ -3,6 +3,7 @@ import 'package:ManageMe/User.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'Login/Logger.dart';
 import 'User.dart';
+import 'theme.dart';
 
 
 
@@ -15,8 +16,10 @@ class HomeScreen extends StatelessWidget {
         appBar: AppBar(
             title:Center(
               child: Text(' خلاصة شهر '+ getCurrentMonth()),
-            )
+            ),
+          backgroundColor: AppTheme.appbarColor ,
         ),
+
         backgroundColor: Color.fromRGBO(101, 127, 172, 1),
         body:Container(
             child:Column(

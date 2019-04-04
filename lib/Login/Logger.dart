@@ -5,6 +5,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:ManageMe/homeNavigation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'fullnameLogin.dart';
+import 'package:connectivity/connectivity.dart';
 
 
 
@@ -31,6 +32,17 @@ class _LoginPage extends State<LoginPage> {
   String phoneNo;
   String smsCode;
   String verificationId;
+  String error = "";
+
+  Future<bool> check() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    }
+    return false;
+  }
 
   Future<void> verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
@@ -39,7 +51,7 @@ class _LoginPage extends State<LoginPage> {
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
       this.verificationId = verId;
-      smsCodeDialog(context).then((value) {
+      smsCodeDialog(this.context).then((value) {
         print('Signed in');
       });
     };
@@ -79,18 +91,8 @@ class _LoginPage extends State<LoginPage> {
               new FlatButton(
                 child: Text('Done'),
                 onPressed: () {
-                  FirebaseAuth.instance.currentUser().then((user) {
-                    if (user != null) {
-                      Navigator.of(context).pop();
-                      Navigator.push(context, new MaterialPageRoute(
-                          builder: (context) =>
-                          new Nav())
-                      );
-                    } else {
-                      Navigator.of(context).pop();
-                      signIn();
-                    }
-                  });
+                  Navigator.pop(context);
+                  signIn();
                 },
               )
             ],
@@ -104,14 +106,14 @@ class _LoginPage extends State<LoginPage> {
         .then((user) {
       DocumentReference ref = _db.collection("users").document(user.uid);
       ref.get().then((doc){
-
+        Navigator.pop(context);
         if(!doc.exists){
-          Navigator.push(context, new MaterialPageRoute(
+          Navigator.pushReplacement(context, new MaterialPageRoute(
               builder: (context) =>
               new FullName())
           );
         }else{
-          Navigator.push(context, new MaterialPageRoute(
+          Navigator.pushReplacement(context, new MaterialPageRoute(
               builder: (context) =>
               new Nav())
           );
@@ -130,13 +132,20 @@ class _LoginPage extends State<LoginPage> {
       body: new Center(
         child: Container(
             padding: EdgeInsets.all(25.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: ListView(
+
               children: <Widget>[
+                new Container(
+                  padding: EdgeInsets.all(50.0),
+                  child: new Center(
+                    child: new Image.asset('images/Logo.png'),
+                  ),
+                ),
                 Container(
                   height: 100,
-                  child: Text("Sign In", textAlign: TextAlign.center,style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold, color: Colors.white),),
+                  child: Text("Get Started", textAlign: TextAlign.center,style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold, color: Colors.white),),
                 ),
+
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -172,11 +181,29 @@ class _LoginPage extends State<LoginPage> {
                     )
                   ],
                 ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(error),
+                ),
                 Container(
                   padding: EdgeInsets.only(top: 50),
                   child:
                   RaisedButton(
-                      onPressed: () => verifyPhone(),
+                      onPressed: (){
+                        check().then((internet){
+                          if(internet != null && internet){
+                            verifyPhone();
+                            setState(() {
+                              this.error = "";
+                            });
+                          }else{
+                            setState(() {
+                              this.error = "Error please connect to the internet";
+                            });
+
+                          }
+                        });
+                        },
                       child: Text('Verify',style: TextStyle(color: Colors.white),),
                       textColor: Colors.white,
                       elevation: 7.0,
@@ -184,6 +211,7 @@ class _LoginPage extends State<LoginPage> {
                       shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0))
                   ),
                 ),
+
 
 
               ],
