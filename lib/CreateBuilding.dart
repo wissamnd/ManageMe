@@ -102,13 +102,10 @@ class _CreateBuilding extends State<CreateBuilding> {
                         new Padding(padding: EdgeInsets.all(10)),
                         new Text('عدد الشقق',textAlign: TextAlign.end,style: TextStyle(color: Colors.white,fontSize: 15),),
                         new Padding(padding: EdgeInsets.all(10)),
-                        new Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: new TextFormField(
+                        new TextFormField(
                             keyboardType: TextInputType.numberWithOptions(decimal: false,signed: false),
                             controller: _buildingApartmentsController,
                             decoration: new InputDecoration(
-                              labelText: "أدخل عددالشقق هنا",
                               fillColor: Colors.blueAccent,
                               border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(25.0),
@@ -119,7 +116,7 @@ class _CreateBuilding extends State<CreateBuilding> {
                               //fillColor: Colors.green
                             ),
                           ),
-                        ),
+
                       ],
                     )
                 ),

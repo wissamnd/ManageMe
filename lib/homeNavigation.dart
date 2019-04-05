@@ -16,7 +16,7 @@ class _HomeState extends State<Nav> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     HomeScreen(),
-    Calculator(),
+    Profile(),
     NavigationScreen(),
   ];
 

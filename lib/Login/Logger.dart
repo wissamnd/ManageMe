@@ -143,7 +143,7 @@ class _LoginPage extends State<LoginPage> {
                 ),
                 Container(
                   height: 100,
-                  child: Text("Get Started", textAlign: TextAlign.center,style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold, color: Colors.white),),
+                  child: Text("ابدأ الآن", textAlign: TextAlign.center,style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold, color: Colors.white),),
                 ),
 
 
@@ -158,7 +158,7 @@ class _LoginPage extends State<LoginPage> {
                       favorite: ['+961','LB'],
                     ),
                     new Container(
-                      width: 200,
+                      width: MediaQuery.of(context).size.width *0.56,
                       child:TextField(
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(

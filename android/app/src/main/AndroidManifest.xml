@@ -14,9 +14,10 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="Manage"
+        android:label="ManageMe"
         android:icon="@mipmap/ic_launcher">
         <activity
+            android:label="Manage"
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
