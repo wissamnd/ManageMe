@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 
@@ -26,7 +28,30 @@ class _CreateBuilding extends State<CreateBuilding> {
   TextEditingController _buildingApartmentsController = new TextEditingController();
 
 
+  Future<String> createABuildingRequest(String uid) async {
 
+    var currency = '';
+    if(_lbp){
+      currency = 'LBP';
+    }else{
+      currency = 'USD';
+    }
+    Map jsonMap = {
+      "address": _buildingAddressController.text,
+      "buildingName": _buildingNameController.text,
+      "Currency": currency,
+      "numberofApartments": int.parse(_buildingApartmentsController.text)
+    };
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient.postUrl(Uri.parse("https://bmsdata-b4ded.firebaseapp.com/api/v1/CreateABuilding?uid="+uid));
+    request.headers.set('content-type', 'application/json');
+    request.add(utf8.encode(json.encode(jsonMap)));
+    HttpClientResponse response = await request.close();
+    String reply = await response.transform(utf8.decoder).join();
+    httpClient.close();
+    print(reply);
+    return reply;
+  }
 
 
   @override
@@ -100,11 +125,12 @@ class _CreateBuilding extends State<CreateBuilding> {
                     child: new Column(
                       children: <Widget>[
                         new Padding(padding: EdgeInsets.all(10)),
-                        new Text('عدد الشقق',textAlign: TextAlign.end,style: TextStyle(color: Colors.white,fontSize: 15),),
+                        new Text('عدد الشقق',textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 15),),
                         new Padding(padding: EdgeInsets.all(10)),
                         new TextFormField(
                             keyboardType: TextInputType.numberWithOptions(decimal: false,signed: false),
                             controller: _buildingApartmentsController,
+                            textAlign: TextAlign.center,
                             decoration: new InputDecoration(
                               fillColor: Colors.blueAccent,
                               border: new OutlineInputBorder(
@@ -169,6 +195,9 @@ class _CreateBuilding extends State<CreateBuilding> {
                     if(_buildingNameController.text.length>0 && _buildingAddressController.text.length >0 && int.parse(_buildingApartmentsController.text) >0){
                       setState(() {
                         error = "";
+                      });
+                      FirebaseAuth.instance.currentUser().then((user){
+                        createABuildingRequest(user.uid);
                       });
                       Navigator.of(context).pop();
                     }else{
