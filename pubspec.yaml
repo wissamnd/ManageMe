@@ -28,6 +28,7 @@ dependencies:
   image_picker: ^0.4.10
   http: ^0.12.0+2
   firebase_storage: ^1.1.0+1
+  tuple: ^1.0.2
 
 
 
@@ -50,8 +51,8 @@ flutter:
 
 
   assets:
-    - images/Logo.png
-    - images/home-3.png
+  - images/sample-avatar.png
+  - images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

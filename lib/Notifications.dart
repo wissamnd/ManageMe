@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' show get;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
+import 'dart:math' as math;
 
 class Notifications extends StatefulWidget{
 
@@ -14,11 +15,13 @@ class Notifications extends StatefulWidget{
 class _Notifications extends State<Notifications>{
   List<String> _messages = [];
 
-  void setUserMessages(String uid) async {
+  void getUserMessages(String uid) async {
     var result = await get('https://bmsdata-b4ded.firebaseapp.com/api/v1/getUserInfo?uid='+uid);
     var valueMap = json.decode(result.body);
     setState(() {
+
       _messages = valueMap["messages"].cast<String>();
+      _messages = _messages.reversed.toList().sublist(0,math.min(_messages.length -1, 15));
     });
   }
 
@@ -26,7 +29,7 @@ class _Notifications extends State<Notifications>{
   void initState() {
       super.initState();
       FirebaseAuth.instance.currentUser().then((user){
-        setUserMessages(user.uid);
+        getUserMessages(user.uid);
       });
 
   }
@@ -39,7 +42,7 @@ class _Notifications extends State<Notifications>{
             title: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text("تبليغات",),
+                Text("الإشعارات",),
               ],
             )
           ),

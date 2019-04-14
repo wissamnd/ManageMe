@@ -1,5 +1,5 @@
-import 'User.dart';
-import 'Bill.dart';
+import 'package:ManageMe/Objects/User.dart';
+import 'package:ManageMe/Objects/Bill.dart';
 
 
 class Building{

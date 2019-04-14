@@ -1,4 +1,4 @@
-import 'User.dart';
+import 'package:ManageMe/Objects/User.dart';
 class Bill{
   String bId;
   List<String> users;

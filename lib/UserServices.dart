@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
-import 'User.dart';
-import 'Building.dart';
-import 'Bill.dart';
+import 'package:ManageMe/Objects/User.dart';
+import 'package:ManageMe/Objects/Building.dart';
+import 'package:ManageMe/Objects/Bill.dart';
 
 class UserServices{
 
@@ -14,19 +14,7 @@ class UserServices{
     return await result.data[data];
   }
 
-  static Future<User> getCurrentUserInfo(String currentUid) async{
-    DocumentSnapshot result = await refToUsers.document(currentUid).get();
-    var fullName = await result.data["fullName"];
-    var uid = await result.data["uid"];
-    var buildings = await result.data["buildings"];
-    var phoneNumber = await result.data["phonenumber"];
-    var email = await result.data["email"];
-    var photo = await result.data["photo"];
-    var about = await result.data["about"];
-    var traveling = await result.data["traveling"];
-    User currentUser = new User(fullName, uid, buildings, phoneNumber, email, photo, about, traveling);
-    return currentUser;
-  }
+
 
   static void updateAbout(String currentUid, String text){
     DocumentReference result = refToUsers.document(currentUid);

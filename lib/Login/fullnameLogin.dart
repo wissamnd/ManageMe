@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ManageMe/homeNavigation.dart';
-import 'package:ManageMe/User.dart';
-import 'package:ManageMe/UserServices.dart';
+import 'package:ManageMe/Objects/User.dart';
 import 'package:connectivity/connectivity.dart';
 
 
@@ -28,9 +26,9 @@ class _FullName extends State<FullName>{
     return false;
   }
 
-  void SetName(){
+  void setName(){
     FirebaseAuth.instance.currentUser().then((user){
-      User initializeUser  = new User(this.fullName, user.uid, [], user.phoneNumber, "", "http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png", "", false);
+      User initializeUser  = new User(this.fullName, user.uid, [], user.phoneNumber, "", "http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png", "", false,[]);
       initializeUser.updateAllInfoInDatabase();
     });
 
@@ -92,7 +90,7 @@ class _FullName extends State<FullName>{
                           if((fullName !=null) && (fullName.length > 0) ){
                             setState(() {
                               this.error = "";
-                              SetName();
+                              setName();
                             });
                           }else{
                             print("please enter a name");

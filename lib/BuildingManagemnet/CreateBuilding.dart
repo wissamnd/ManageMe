@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-
-
+import 'ListOfBuildings.dart';
 
 class CreateBuilding extends StatefulWidget{
 
@@ -197,9 +196,17 @@ class _CreateBuilding extends State<CreateBuilding> {
                         error = "";
                       });
                       FirebaseAuth.instance.currentUser().then((user){
-                        createABuildingRequest(user.uid);
+                        createABuildingRequest(user.uid).then((r){
+                          print(r);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushReplacement(new MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return new BuildingsList();
+                            },
+                          ));
+                        });
                       });
-                      Navigator.of(context).pop();
+
                     }else{
                       setState(() {
                         error = "الرجاء إدخال الحقول المفقودة";

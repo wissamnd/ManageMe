@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'homeScreen.dart';
-import 'profileScreen.dart';
-import 'calculator_widget.dart';
 import 'NavigationScreen.dart';
+import 'messages.dart';
+import 'theme.dart';
 
 
 class Nav extends StatefulWidget {
@@ -16,8 +16,8 @@ class _HomeState extends State<Nav> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     HomeScreen(),
-    Profile(),
-    NavigationScreen(),
+    Messages(),
+    NavigationScreen()
   ];
 
   @override
@@ -25,6 +25,7 @@ class _HomeState extends State<Nav> {
     return Scaffold(
       body: _children[_currentIndex], // new
       bottomNavigationBar: BottomNavigationBar(
+        fixedColor: AppTheme.textOne,
         onTap: onTabTapped, // new
         currentIndex: _currentIndex, // new
         items: [

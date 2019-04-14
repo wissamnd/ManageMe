@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ManageMe/User.dart';
+import 'package:ManageMe/Objects/User.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'Login/Logger.dart';
-import 'User.dart';
+import 'package:ManageMe/Objects/User.dart';
 import 'theme.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' show get;
-import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 
 
@@ -21,22 +20,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-
   DateTime _initialDate;
-  var _amountDue = 0;
+  static var _amountDue = 0;
   String _currency = "LBP";
 
 
   @override
   void initState() {
+    super.initState();
     _initialDate = DateTime.now();
-    FirebaseAuth.instance.currentUser().then((user){
-      getUserBuilding("dg5zIWw0u5RwkdPT0vyqmgTQxnj2").then((amount){
-        setState(() {
-          _amountDue = amount;
+      FirebaseAuth.instance.currentUser().then((user){
+        getUserBuilding(user.uid).then((amount){
+          setState(() {
+            _amountDue = amount;
+          });
         });
       });
-    });
+
 
   }
   Future getUserBuilding(String uid) async {
@@ -49,7 +49,6 @@ class HomeScreenState extends State<HomeScreen> {
         amount += number;
       });
     }
-    print(amount);
     return amount;
   }
 
@@ -60,7 +59,11 @@ class HomeScreenState extends State<HomeScreen> {
     var valueMap = json.decode(result.body);
     for(var i = 0 ; i < valueMap.length;i++){
       if(valueMap[i]["usersWhoPaid"].indexOf(uid) < 0){
-        amount = amount + valueMap[i]["amount"];
+        if(valueMap[i]["Currency"]== 'USD'){
+          amount = amount + (valueMap[i]["amount"]*1500);
+        }else{
+          amount = amount + valueMap[i]["amount"];
+        }
       }
     }
     return amount;

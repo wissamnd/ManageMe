@@ -1,8 +1,5 @@
-import 'Building.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'dart:async';
+
 class User {
   String fullName;
   String uid;
@@ -12,21 +9,11 @@ class User {
   String photo;
   String about;
   bool traveling;
+  List<String> messages;
 
   User(this.fullName, this.uid, this.buildings, this.phoneNumber, this.email,
-      this.photo, this.about, this.traveling);
+      this.photo, this.about, this.traveling,this.messages);
 
-  User.instance(){
-    this.fullName = "";
-    this.uid = "";
-    this.buildings = [""];
-    this.phoneNumber = "";
-    this.email = "";
-    this.photo = "";
-    this.about ="";
-    this.traveling = false;
-
-  }
   List<String> _getBuildingNames(){
     List<String> l = [];
     for(int i = 0; i < buildings.length; i++){
@@ -45,7 +32,8 @@ class User {
       'email': this.email,
       'photo': this.photo,
       'about': this.about,
-      'traveling': this.traveling
+      'traveling': this.traveling,
+      'messages': messages
     }, merge: true);
   }
 
@@ -53,6 +41,4 @@ class User {
   String toString() {
     return 'User{fullName: $fullName, uid: $uid, buildings: $buildings, phoneNumber: $phoneNumber, email: $email, photo: $photo, about: $about, traveling: $traveling}';
   }
-
-
 }
