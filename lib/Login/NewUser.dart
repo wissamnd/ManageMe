@@ -2,42 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ManageMe/homeNavigation.dart';
 import 'package:ManageMe/Objects/User.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:ManageMe/Services/ConnectivityServices.dart';
 
 
 
-
-class FullName extends StatefulWidget{
+class NewUser extends StatefulWidget{
   @override
-  _FullName createState() => new _FullName();
+  _NewUser createState() => new _NewUser();
 }
 
-class _FullName extends State<FullName>{
+class _NewUser extends State<NewUser>{
   String fullName;
   String error = "";
 
-  Future<bool> check() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile) {
-      return true;
-    } else if (connectivityResult == ConnectivityResult.wifi) {
-      return true;
-    }
-    return false;
-  }
-
-  void setName(){
+  // initializing a new User
+  void initializeNewUser(){
     FirebaseAuth.instance.currentUser().then((user){
       User initializeUser  = new User(this.fullName, user.uid, [], user.phoneNumber, "", "http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png", "", false,[]);
       initializeUser.updateAllInfoInDatabase();
     });
-
     Navigator.pushReplacement(this.context, new MaterialPageRoute(
         builder: (context) =>
         new Nav())
     );
-
-
   }
   @override
   Widget build(BuildContext context) {
@@ -75,7 +62,7 @@ class _FullName extends State<FullName>{
                   ),
                 ),
                 onChanged: (value) {
-                  this.fullName = value;
+                  fullName = value;
                 },
               ),
               Text(error,style: TextStyle(color: Colors.white70,fontStyle: FontStyle.italic),),
@@ -84,25 +71,25 @@ class _FullName extends State<FullName>{
                 child:
                 RaisedButton(
                     onPressed: (){
-                      check().then((internet){
+                      ConnectivityServices.checkConnection().then((internet){
                         if(internet != null && internet){
 
                           if((fullName !=null) && (fullName.length > 0) ){
                             setState(() {
-                              this.error = "";
-                              setName();
+                              error = "";
+                              initializeNewUser();
                             });
                           }else{
                             print("please enter a name");
                             setState(() {
-                              this.error = "please enter a name";
+                              error = "please enter a name";
                             });
                           }
 
                         }else{
                           print("You have no internet connection");
                           setState(() {
-                            this.error = "You have no internet connection";
+                            error = "You have no internet connection";
                           });
                         }
                       });

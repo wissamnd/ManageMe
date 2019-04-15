@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' show get;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:convert';
 import 'dart:math' as math;
+import 'package:ManageMe/Services/UserServices.dart';
+import 'theme.dart';
 
 class Notifications extends StatefulWidget{
 
@@ -14,31 +14,23 @@ class Notifications extends StatefulWidget{
 
 class _Notifications extends State<Notifications>{
   List<String> _messages = [];
-
-  void getUserMessages(String uid) async {
-    var result = await get('https://bmsdata-b4ded.firebaseapp.com/api/v1/getUserInfo?uid='+uid);
-    var valueMap = json.decode(result.body);
-    setState(() {
-
-      _messages = valueMap["messages"].cast<String>();
-      _messages = _messages.reversed.toList().sublist(0,math.min(_messages.length -1, 15));
-    });
-  }
-
   @override
   void initState() {
       super.initState();
       FirebaseAuth.instance.currentUser().then((user){
-        getUserMessages(user.uid);
+        UserServices.getUserNotifications(user.uid).then((n){
+          _messages = n;
+          setState(() {
+            _messages = _messages.reversed.toList().sublist(0,math.min(_messages.length -1, 15));
+          });
+        });
       });
-
   }
   @override
   Widget build(BuildContext context) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Color.fromRGBO(101, 127, 172, 1),
-
+            backgroundColor: AppTheme.appbarColor,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -46,7 +38,7 @@ class _Notifications extends State<Notifications>{
               ],
             )
           ),
-          backgroundColor: Color.fromRGBO(101, 127, 172, 1),
+          backgroundColor: AppTheme.backgroundColor,
           body: new ListView.builder
             (
               shrinkWrap: true,
@@ -63,13 +55,8 @@ class _Notifications extends State<Notifications>{
                     child:new Text(_messages[index],textAlign: TextAlign.right,),
                   ),
                 );
-
-
-
               }
           ),
         );
   }
-
-
 }

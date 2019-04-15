@@ -4,10 +4,8 @@ import 'dart:async';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:ManageMe/homeNavigation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'fullnameLogin.dart';
-import 'package:connectivity/connectivity.dart';
-
-
+import 'NewUser.dart';
+import 'package:ManageMe/Services/ConnectivityServices.dart';
 
 
 class Logger extends StatelessWidget {
@@ -34,15 +32,7 @@ class _LoginPage extends State<LoginPage> {
   String verificationId;
   String error = "";
 
-  Future<bool> check() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile) {
-      return true;
-    } else if (connectivityResult == ConnectivityResult.wifi) {
-      return true;
-    }
-    return false;
-  }
+
 
   Future<void> verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
@@ -110,7 +100,7 @@ class _LoginPage extends State<LoginPage> {
         if(!doc.exists){
           Navigator.pushReplacement(context, new MaterialPageRoute(
               builder: (context) =>
-              new FullName())
+              new NewUser())
           );
         }else{
           Navigator.pushReplacement(context, new MaterialPageRoute(
@@ -145,8 +135,6 @@ class _LoginPage extends State<LoginPage> {
                   height: 100,
                   child: Text("ابدأ الآن", textAlign: TextAlign.center,style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold, color: Colors.white),),
                 ),
-
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -190,15 +178,15 @@ class _LoginPage extends State<LoginPage> {
                   child:
                   RaisedButton(
                       onPressed: (){
-                        check().then((internet){
+                        ConnectivityServices.checkConnection().then((internet){
                           if(internet != null && internet){
                             verifyPhone();
                             setState(() {
-                              this.error = "";
+                              error = "";
                             });
                           }else{
                             setState(() {
-                              this.error = "Error please connect to the internet";
+                              error = "Error please connect to the internet";
                             });
 
                           }
@@ -211,9 +199,6 @@ class _LoginPage extends State<LoginPage> {
                       shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0))
                   ),
                 ),
-
-
-
               ],
             )),
       ),
