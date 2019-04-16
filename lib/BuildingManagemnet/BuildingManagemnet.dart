@@ -8,6 +8,9 @@ import 'ListOfBuildings.dart';
 import 'BuildingTenants.dart';
 import 'AddTenant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'BillManagemnet.dart';
+import 'package:ManageMe/Services/UserServices.dart';
+import 'AddBill.dart';
 class BuildingManagement extends StatefulWidget {
   final pBuilding;
   final pBuildingID;
@@ -16,6 +19,8 @@ class BuildingManagement extends StatefulWidget {
   @override
   _BuildingManagementState createState() => _BuildingManagementState(pBuilding: pBuilding,pBuildingID: pBuildingID);
 }
+
+
 
 Widget displayCurrentReservedText(double amount, String currency){
 
@@ -73,6 +78,7 @@ class _BuildingManagementState extends State<BuildingManagement> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,18 +137,18 @@ class _BuildingManagementState extends State<BuildingManagement> {
                     SizedBox(
                       width: 300,
                       child:new RaisedButton(
-                        child: new Text('الفواتير'),
+                        child: new Text('الفواتير غير المسددة'),
                         shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(10.0),
                         ),
                         color: Colors.white,
 
                         onPressed: (){
-//                        Navigator.of(context).push(new MaterialPageRoute<UserAccount>(
-//                          builder: (BuildContext context) {
-//                            return new BillsList();
-//                          },
-//                        ));
+                        Navigator.of(context).push(new MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return new BillManagement(building: pBuilding,buildingID: pBuildingID,writeAccess: writeAccess,);
+                          },
+                        ));
                         },
                       ),
                     ),
@@ -188,11 +194,11 @@ class _BuildingManagementState extends State<BuildingManagement> {
                         ),
                         color: Colors.white,
                         onPressed: (){
-//                        Navigator.of(context).push(new MaterialPageRoute<UserAccount>(
-//                          builder: (BuildContext context) {
-//                            return new BillsList();
-//                          },
-//                        ));
+                        Navigator.of(context).push(new MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return new AddBill(building: pBuilding,buildingID: pBuildingID,);
+                          },
+                        ));
                         },
                       ),
                     ),

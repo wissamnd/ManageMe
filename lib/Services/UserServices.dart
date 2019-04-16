@@ -43,15 +43,18 @@ class UserServices{
      return valueMap["messages"].cast<String>();
    }
 
-
-
-
-
-
-
-
-
-
+   // given a list of user IDs give there names
+   static Future<List<String>>getUserName(List<dynamic> uids) async {
+     List<String> names = [];
+     for (int i = 0; i < uids.length; i++) {
+       var result = await get(
+           'https://bmsdata-b4ded.firebaseapp.com/api/v1/getUserInfo?uid=' +
+               uids[i]);
+       var valueMap = await json.decode(result.body);
+       names.add(await valueMap["fullName"]);
+     }
+     return names;
+   }
 
 
 }

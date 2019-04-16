@@ -53,7 +53,7 @@ class _BuildingTenantsState extends State<BuildingTenants> {
       body: ListView(
         children: <Widget>[
           Padding(padding: EdgeInsets.all(10)),
-          (_listOfInfo.length == 0)? Center(child:CircularProgressIndicator()):
+          (_listOfInfo.length == 0)? Center(child:CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),)):
           Column(
               children: _listOfInfo.map((tenant)=>
                   MaterialButton(
