@@ -13,8 +13,7 @@ class UserAccount extends StatefulWidget{
     @override
   _UserAccountState createState() => _UserAccountState();
 }
-
-
+enum Options { uploadPhoto, signOUt}
 class _UserAccountState extends State<UserAccount>{
   File _image;
   var uid = "";
@@ -31,10 +30,12 @@ class _UserAccountState extends State<UserAccount>{
 
   // uploading photo to Firebase storage
   Future uploadPhoto(File avatarImageFile) async {
+
     String fileName = uid;
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = reference.putFile(avatarImageFile);
     StorageTaskSnapshot storageTaskSnapshot;
+
     uploadTask.onComplete.then((value) {
       if (value.error == null) {
         storageTaskSnapshot = value;
@@ -59,7 +60,7 @@ class _UserAccountState extends State<UserAccount>{
       _image = image;
     });
   }
-  // Display Widgets in case of loading
+
   Widget _fullNameDisplay(){
     if(fullName.length == 0){
       return new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),);
@@ -130,8 +131,39 @@ class _UserAccountState extends State<UserAccount>{
    Widget build(BuildContext context) {
      return new Scaffold(
        appBar: new AppBar(
+         centerTitle: true,
          title: Text("إدارة الملف الشخصي",style: TextStyle(fontSize: 20,color: Colors.white),),
          backgroundColor: Color.fromRGBO(101, 127, 172, 0.5),
+         actions: <Widget>[
+           PopupMenuButton<Options>(
+             onSelected: (Options result) {
+               if(result == Options.signOUt){
+                 FirebaseAuth.instance.signOut().then((action) {
+                   Navigator.pushReplacement(context, new MaterialPageRoute(
+                       builder: (context) =>
+                       new LoginPage())
+                   );
+                 }).catchError((e) {
+                   print(e);
+                 });
+               }else if(result == Options.uploadPhoto){
+                 getImage().then((_){
+                   uploadPhoto(_image);
+                 });
+               }
+             },
+             itemBuilder: (BuildContext context) => <PopupMenuEntry<Options>>[
+               const PopupMenuItem<Options>(
+                 value: Options.uploadPhoto,
+                 child: Text('تغيير الصورة'),
+               ),
+               const PopupMenuItem<Options>(
+                 value: Options.signOUt,
+                 child: Text('الخروج'),
+               ),
+             ],
+           )
+         ],
        ),
        backgroundColor: Color.fromRGBO(101, 127, 172, 1),
        body: new Container(
@@ -350,61 +382,9 @@ class _UserAccountState extends State<UserAccount>{
                        ],
                      ),
                      Text("مسافر",style: TextStyle(fontSize: 15,color: Colors.white),),
-
-
                    ],
                  ) ,
                ),
-               Container(
-                 child:Row(
-                   mainAxisAlignment: MainAxisAlignment.center,
-                   children: <Widget>[
-                     SizedBox(
-                       width: 200,
-                       child:new RaisedButton(
-                         child: new Text('تغيير الصورة'),
-                         textColor: Colors.blueAccent,
-                         shape: new RoundedRectangleBorder(
-                           borderRadius: new BorderRadius.circular(10.0),
-                         ),
-                         color: Colors.white,
-                         onPressed: (){
-                           getImage().then((_){
-                             uploadPhoto(_image);
-                           });
-                         },
-                       ),
-                     )
-
-                   ],
-                 )
-               ),
-               Container(
-                 child: Row(
-                   mainAxisAlignment: MainAxisAlignment.center,
-                   children: <Widget>[
-                     SizedBox(
-                       width: 200,
-                       child: MaterialButton(
-                           textColor: Colors.white,
-                           color: Colors.red,
-                           child: new Text("الخروج"),
-                           onPressed: (){
-                             FirebaseAuth.instance.signOut().then((action) {
-                               Navigator.pushReplacement(context, new MaterialPageRoute(
-                                   builder: (context) =>
-                                   new LoginPage())
-                               );
-                             }).catchError((e) {
-                               print(e);
-                             });
-                           }
-                       ),
-                     ),
-                   ],
-                 ),
-               ),
-
              ],
            ),
          )

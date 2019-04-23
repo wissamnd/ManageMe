@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'BuildingManagemnet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'CreateBuilding.dart';
+import 'package:ManageMe/theme.dart';
 
 class BuildingsList extends StatefulWidget {
   @override
@@ -38,10 +39,9 @@ Future getTotalBills(String uid,String buildingID) async {
   var result = await get('https://bmsdata-b4ded.firebaseapp.com/api/v1/getMyMonthlyBuildingBills?uid='+uid+'&buildingID='+buildingID+'&month='+month.toString()+'&year='+year.toString());
   var listOfBills = json.decode(result.body);
   for(var i = 0; i < listOfBills.length;i++ ){
-    total =  total + await ( listOfBills[i]["amount"] * listOfBills[i]["users"].length) ;
+    total =  total + await ( listOfBills[i]["amount"]) ;
   }
   return total;
-
 }
 
 // return a map with each building name and corresponding bills amount
@@ -115,83 +115,71 @@ class BuildingsListState extends State<BuildingsList> {
         ListView(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-                children: _allBuildings
-                    .map((building) =>
-                new Padding(
-                  padding: EdgeInsets.all(10),
-                  child: MaterialButton(
-                    onPressed: (){
-                        setState(() {
-                          currentPressed = building;
-                          currentPressedID = _allBuildingsIDs[_allBuildings.indexOf(building)];
-                        });
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => BuildingManagement(pBuilding: building,pBuildingID: currentPressedID,),)
-                        );
-
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: new BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: new BorderRadius.all(Radius.circular(20))
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                (building["manager"]==uid)?Icon(Icons.perm_identity):Text(""),
-                              Text(building["buildingName"],style: TextStyle(fontSize: 20),textAlign: TextAlign.right,),
-                              Text("عدد السكان: "+ building["tenantsUID"].length.toString(),style: TextStyle(fontSize: 15),textAlign: TextAlign.right,),
-                              Text("شاغر:" + (building["numberofApartments"]- building["tenantsUID"].length).toString(),style: TextStyle(color: Colors.grey),textAlign: TextAlign.right,),
-                              Padding(padding: EdgeInsets.all(5),),
-                              Text(" قيمة الفواتير الحالية",style: TextStyle(fontSize: 15),textAlign: TextAlign.right,),
-                              displayCurrentBillsText(_currentBillsTotalMap, building["buildingName"],building["Currency"])
-
-                              ],
-                            ),
-                          ),
-                          Padding(padding: EdgeInsets.all(10),),
-                          new Image.asset('images/skyline.png', width: 120.0, height: 120.0),
-                        ],
-                      ),
-                    ),
-                  ),
-                ))
-                    .toList()),
+            padding: EdgeInsets.all(20),
+            child: FloatingActionButton.extended(
+              elevation: 0.0,
+              backgroundColor: Colors.white,
+              onPressed: () {
+                Navigator.of(context).push(new MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return new CreateBuilding();
+                  },
+                ));
+              },
+              icon: Icon(Icons.add,color: AppTheme.textOne,),
+              label: new Text('إنشاء مبنى',style: TextStyle(color: Color.fromRGBO(101, 127, 172, 1)),),
+            ),
           ),
-          Container(
-              child:Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: 300,
-                    child:new RaisedButton(
-                      child: new Text('إنشاء مبنى'),
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(10.0),
-                      ),
+          Column(
+              children: _allBuildings
+                  .map((building) =>
+              new Padding(
+                padding: EdgeInsets.all(10),
+                child: MaterialButton(
+                  onPressed: (){
+                      setState(() {
+                        currentPressed = building;
+                        currentPressedID = _allBuildingsIDs[_allBuildings.indexOf(building)];
+                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => BuildingManagement(pBuilding: building,pBuildingID: currentPressedID,),)
+                      );
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: new BoxDecoration(
                       color: Colors.white,
-                      onPressed: (){
-                        Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return new CreateBuilding();
-                          },
-                        ));
-                      },
+                      borderRadius: new BorderRadius.all(Radius.circular(20))
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              (building["manager"]==uid)?Icon(Icons.perm_identity):Text(""),
+                            Text(building["buildingName"],style: TextStyle(fontSize: 20),textAlign: TextAlign.right,),
+                            Text("عدد السكان: "+ building["tenantsUID"].length.toString(),style: TextStyle(fontSize: 15),textAlign: TextAlign.right,),
+                            Text("شاغر:" + (building["numberofApartments"]- building["tenantsUID"].length).toString(),style: TextStyle(color: Colors.grey),textAlign: TextAlign.right,),
+                            Padding(padding: EdgeInsets.all(5),),
+                            Text("مقدار الفاتورة التي يجب عليك دفعها",style: TextStyle(fontSize: 15),textAlign: TextAlign.right,),
+                            displayCurrentBillsText(_currentBillsTotalMap, building["buildingName"],building["Currency"])
+
+                            ],
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.all(10),),
+                        new Image.asset('images/skyline.png', width: 120.0, height: 120.0),
+                      ],
                     ),
                   ),
-
-                ],
-              )
-          ),
+                ),
+              ))
+                  .toList()),
         ],
       )
     );

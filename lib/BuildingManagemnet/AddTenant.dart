@@ -109,7 +109,6 @@ class _AddTenant extends State<AddTenant> {
                                   textDirection: TextDirection.rtl,
                                   child:TextField(
                                     controller: _buildingLocationController,
-                                    keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                       fillColor: Color.fromRGBO(66, 85, 156, 1),
                                       hintText: "أدخل المكان هنا",

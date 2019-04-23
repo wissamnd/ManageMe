@@ -19,7 +19,10 @@ class HomeScreenState extends State<HomeScreen> {
   DateTime _currentDate;
   static var _amountDue = 0;
   static var _loading = true;
+  var _error = false;
   String _currency = "LBP";
+  String statusText = "..."+"جار التحميل";
+  String errorText = "أعد التحميل من فضلك";
 
 
   @override
@@ -31,6 +34,11 @@ class HomeScreenState extends State<HomeScreen> {
           setState(() {
             _amountDue = amount;
             _loading = false;
+            _error = false;
+          });
+        }).catchError((e){
+          setState(() {
+            _error = true;
           });
         });
       });
@@ -41,9 +49,32 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title:Center(
-              child: Text(' خلاصة شهر '+ DateServices.getMonthName(_currentDate.month),)
-            ),
+          centerTitle: true,
+          actions: <Widget>[
+            MaterialButton(
+              child: new Tooltip(message: "إعادة تحميل",child: new Icon(Icons.refresh,color: Colors.white),),
+              onPressed: (){
+                setState(() {
+                  statusText = "..."+"جار التحميل";
+                  _loading = true;
+                });
+                FirebaseAuth.instance.currentUser().then((user){
+                  UserServices.getUserTotalDueBillsInAllBuildingsLBP(user.uid, _currentDate.month, _currentDate.year).then((amount){
+                    setState(() {
+                      _amountDue = amount;
+                      _loading = false;
+                      _error = false;
+                    });
+                  }).catchError((e){
+                    setState(() {
+                      _error = true;
+                    });
+                  });
+                });
+              },
+            )
+          ],
+            title:Text(' خلاصة شهر '+ DateServices.getMonthName(_currentDate.month),),
           backgroundColor: AppTheme.appbarColor ,
         ),
 
@@ -60,28 +91,22 @@ class HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             children: <Widget>[
                               Text("المبلغ المستحق",style: TextStyle(fontSize: 30, color:AppTheme.textOne.withOpacity(0.5), ),),
-
                               (_loading)?
-                              CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(AppTheme.circularIndicators))
+                              Text(statusText,style:TextStyle(fontSize: 30,color:AppTheme.textOne),textAlign: TextAlign.right,)
                                   : Text(new NumberFormat("###,###", "en_US").format(_amountDue).toString(),style: TextStyle(fontSize: 40,color:AppTheme.textOne), ),
-
-                              Text(_currency,style: TextStyle(fontSize: 20,color:AppTheme.textOne), ),
+                              (!_loading)?Text(_currency,style: TextStyle(fontSize: 20,color:AppTheme.textOne), ):Container(),
                               new Padding(padding: EdgeInsets.all(5)),
-//                              Container(
-//                                  child: new Text (
-//                                      "+ 100,000 L.L",
-//                                      style: new TextStyle(
-//                                          color: Color.fromRGBO(101, 127, 172, 1),
-//                                          fontWeight: FontWeight.w900
-//                                      )
-//                                  ),
-//                                decoration: new BoxDecoration (
-//                                    borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
-//                                    color: Color.fromRGBO(101, 127, 172, 0.5)
-//                                  ),
-//                                  padding: new EdgeInsets.fromLTRB(16.0, 9.0, 16.0, 9.0),
-//                              ),
-
+                              (_error)?Center(
+                                child:
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: new BorderRadius.all(Radius.circular(10))
+                                  ),
+                                  child: Text(errorText,style: TextStyle(color: Colors.white),),
+                                ),
+                              ):Container()
                             ],
                           )
                       ),
@@ -90,7 +115,7 @@ class HomeScreenState extends State<HomeScreen> {
                         color: Colors.white,
                       ),
                     ),
-                  )
+                  ),
                 ],
               )
           ),

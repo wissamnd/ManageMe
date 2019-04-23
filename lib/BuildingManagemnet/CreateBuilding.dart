@@ -69,23 +69,25 @@ class _CreateBuilding extends State<CreateBuilding> {
                     child: Center(
                       child: new Column(
                         children: <Widget>[
+                          new Padding(padding: EdgeInsets.all(10)),
                           new Text('إسم البناية',textAlign: TextAlign.end,style: TextStyle(color: Colors.white,fontSize: 15),),
                           new Padding(padding: EdgeInsets.all(10)),
                           new Directionality(
                             textDirection: TextDirection.rtl,
-                            child:new TextFormField(
+                            child:new TextField(
                               controller: _buildingNameController,
                               textAlign: TextAlign.right,
                               decoration: new InputDecoration(
-                                labelText: "أدخل الإسم هنا",
-                                fillColor: Colors.blueAccent,
-                                border: new OutlineInputBorder(
-                                  borderRadius: new BorderRadius.circular(25.0),
-                                  borderSide: new BorderSide(
-                                      color: Colors.white
+                                hintText: "أدخل الإسم هنا",
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: InputBorder.none,
+                                enabledBorder: new OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white,width: 1),
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(10.0),
                                   ),
                                 ),
-                                //fillColor: Colors.green
                               ),
                             ),
                           ),
@@ -105,12 +107,14 @@ class _CreateBuilding extends State<CreateBuilding> {
                             controller: _buildingAddressController,
                             textAlign: TextAlign.right,
                             decoration: new InputDecoration(
-                              labelText: "أدخل العنوان هنا",
-                              fillColor: Colors.blueAccent,
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(25.0),
-                                borderSide: new BorderSide(
-                                    color: Colors.white
+                              hintText: "أدخل العنوان هنا",
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: InputBorder.none,
+                              enabledBorder: new OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white,width: 1),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(10.0),
                                 ),
                               ),
                               //fillColor: Colors.green
@@ -131,11 +135,14 @@ class _CreateBuilding extends State<CreateBuilding> {
                             controller: _buildingApartmentsController,
                             textAlign: TextAlign.center,
                             decoration: new InputDecoration(
-                              fillColor: Colors.blueAccent,
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(25.0),
-                                borderSide: new BorderSide(
-                                    color: Colors.white
+                              hintText: "أدخل عدد الشقق هنا",
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: InputBorder.none,
+                              enabledBorder: new OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white,width: 1),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(10.0),
                                 ),
                               ),
                               //fillColor: Colors.green

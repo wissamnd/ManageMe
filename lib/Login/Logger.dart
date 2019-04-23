@@ -31,6 +31,7 @@ class _LoginPage extends State<LoginPage> {
   String smsCode;
   String verificationId;
   String error = "";
+  bool _isButtonDisabled = false;
 
 
 
@@ -177,13 +178,14 @@ class _LoginPage extends State<LoginPage> {
                   padding: EdgeInsets.only(top: 50),
                   child:
                   RaisedButton(
-                      onPressed: (){
+                      onPressed: (_isButtonDisabled)?null:(){
                         ConnectivityServices.checkConnection().then((internet){
                           if(internet != null && internet){
-                            verifyPhone();
                             setState(() {
+                              _isButtonDisabled = true;
                               error = "";
                             });
+                            verifyPhone();
                           }else{
                             setState(() {
                               error = "Error please connect to the internet";

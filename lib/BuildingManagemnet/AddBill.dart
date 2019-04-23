@@ -313,6 +313,7 @@
                                _billDueDate.day.toString()+"|"+_billDueDate.year.toString()).then((r){
                                  print(r);
                                  Navigator.of(context).pop();
+                                 Navigator.of(context).pop();
                                  Navigator.of(context).pushReplacement(new MaterialPageRoute(
                                    builder: (BuildContext context) {
                                      return new BuildingsList();

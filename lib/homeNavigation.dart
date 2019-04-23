@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'homeScreen.dart';
 import 'NavigationScreen.dart';
-import 'messages.dart';
 import 'theme.dart';
 
 
@@ -16,7 +15,6 @@ class _HomeState extends State<Nav> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     HomeScreen(),
-    Messages(),
     NavigationScreen()
   ];
 
@@ -33,10 +31,10 @@ class _HomeState extends State<Nav> {
             icon: Icon(Icons.home),
             title:Text("الصفحة الرئيسية"),
           ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.mail),
-            title: Text("الرسائل"),
-          ),
+//          new BottomNavigationBarItem(
+//            icon: Icon(Icons.mail),
+//            title: Text("الرسائل"),
+//          ),
           new BottomNavigationBarItem(
             icon: Icon(Icons.person),
             title: Text("الملف الشخصي"),

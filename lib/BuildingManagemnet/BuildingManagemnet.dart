@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' show get;
 import 'dart:convert';
 import 'dart:io';
 import 'ListOfBuildings.dart';
@@ -9,7 +8,6 @@ import 'BuildingTenants.dart';
 import 'AddTenant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'BillManagemnet.dart';
-import 'package:ManageMe/Services/UserServices.dart';
 import 'AddBill.dart';
 class BuildingManagement extends StatefulWidget {
   final pBuilding;
@@ -208,8 +206,11 @@ class _BuildingManagementState extends State<BuildingManagement> {
             ):Container(),
             Padding(padding: EdgeInsets.all(30)),
             Container(
+              decoration: new BoxDecoration(
+                borderRadius: new BorderRadius.all(Radius.circular(10)),
+                color: Colors.white,
+              ),
               padding: EdgeInsets.all(10),
-              color: Colors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[

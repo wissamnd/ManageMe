@@ -51,12 +51,14 @@ class _BillManagementState extends State<BillManagement> {
   var building;
   var buildingID;
   var _bills = [];
+  var _isloading = true;
   _BillManagementState({Key key, @required this.building,@required this.buildingID,@required this.writeAccess});
   @override
   void initState() {
     getAllBuildingUnpaidBills(building).then((bills){
       setState(() {
         _bills = bills;
+        _isloading =false;
       });
     });
     super.initState();
@@ -113,7 +115,7 @@ class _BillManagementState extends State<BillManagement> {
       body: ListView(
         padding: EdgeInsets.all(10),
         children: <Widget>[
-          (_bills.length == 0)?Center(child:CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),))
+          (_isloading)?Center(child:CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),))
               :Column(
           children: _bills
                   .map((element) =>
@@ -221,11 +223,12 @@ class _BillManagementState extends State<BillManagement> {
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                new Text(DateServices.getMonthName((new DateTime(int.parse(element["dueTime"].split("|")[2]),int.parse(element["dueTime"].split("|")[0]),int.parse(element["dueTime"].split("|")[1]),0,0,0,0)).month),
-                                  style: TextStyle(fontSize: 20),),
-                                new Text(getWeekday((new DateTime(int.parse(element["dueTime"].split("|")[2]),int.parse(element["dueTime"].split("|")[0]),int.parse(element["dueTime"].split("|")[1]),0,0,0,0)).weekday),
-                                  style: TextStyle(fontSize: 20),),
                                 new Text((new DateTime(int.parse(element["dueTime"].split("|")[2]),int.parse(element["dueTime"].split("|")[0]),int.parse(element["dueTime"].split("|")[1]),0,0,0,0)).day.toString(),
+                                  style: TextStyle(fontSize: 20),),
+                                (element["repeat"])?new Text(DateServices.getMonthName((new DateTime(int.parse(element["dueTime"].split("|")[2]),int.parse(element["dueTime"].split("|")[0]),int.parse(element["dueTime"].split("|")[1]),0,0,0,0)).month),
+                                  style: TextStyle(fontSize: 20),):new Text(DateServices.getMonthName((DateTime.now().month)),
+                                  style: TextStyle(fontSize: 20),),
+                                new Text((new DateTime(int.parse(element["dueTime"].split("|")[2]),int.parse(element["dueTime"].split("|")[0]),int.parse(element["dueTime"].split("|")[1]),0,0,0,0)).year.toString(),
                                   style: TextStyle(fontSize: 20),),
                               ],
                             ),

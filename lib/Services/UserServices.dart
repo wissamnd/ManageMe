@@ -26,6 +26,9 @@ class UserServices{
   static Future getUserTotalDueBillsInAllBuildingsLBP(String uid,int month,int year) async {
     var amount = 0;
     var result = await get('https://bmsdata-b4ded.firebaseapp.com/api/v1/getUserInfo?uid='+uid);
+    if(result !=null && result.statusCode != 200){
+      throw new StateError("An error has occurred");
+    }
     var valueMap = json.decode(result.body);
     var buildingIDs = valueMap["buildings"].cast<String>();
     for(var i = 0; i < buildingIDs.length;i++){
@@ -33,6 +36,7 @@ class UserServices{
         amount += number;
       });
     }
+
     return amount;
   }
 

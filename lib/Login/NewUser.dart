@@ -34,72 +34,77 @@ class _NewUser extends State<NewUser>{
         backgroundColor: Color.fromRGBO(101, 127, 172, 1),
         body: Container(
           padding: EdgeInsets.all(10.0),
-          child:Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child:ListView(
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(10),
-                child:Text("Welcome to ManageMe",style: TextStyle(fontSize: 30, color: Colors.white),),
+              Center(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child:Text("Welcome to ManageMe",style: TextStyle(fontSize: 30, color: Colors.white),),
+                ),
               ),
 
               new Padding(padding: EdgeInsets.all(20)),
 
-              TextField(
-                style: new TextStyle(color: Colors.white),
-                cursorColor: Colors.white,
-                maxLength: 28,
-                decoration: InputDecoration(
-                  labelStyle: TextStyle(color: Colors.white),
-                  labelText: "Full Name",
-                  fillColor: Color.fromRGBO(66, 85, 156, 1),
-                  hintStyle: TextStyle(color: Colors.white),
-                  filled: true,
-                  enabledBorder: new OutlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(66, 85, 156, 1),width: 0),
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(10.0),
+              Center(
+                child: TextField(
+                  style: new TextStyle(color: Colors.white),
+                  cursorColor: Colors.white,
+                  maxLength: 28,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(color: Colors.white),
+                    labelText: "Full Name",
+                    fillColor: Color.fromRGBO(66, 85, 156, 1),
+                    hintStyle: TextStyle(color: Colors.white),
+                    filled: true,
+                    enabledBorder: new OutlineInputBorder(
+                      borderSide: BorderSide(color: Color.fromRGBO(66, 85, 156, 1),width: 0),
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(10.0),
+                      ),
                     ),
                   ),
+                  onChanged: (value) {
+                    fullName = value;
+                  },
                 ),
-                onChanged: (value) {
-                  fullName = value;
-                },
               ),
-              Text(error,style: TextStyle(color: Colors.white70,fontStyle: FontStyle.italic),),
-              Container(
-                padding: EdgeInsets.only(top: 50),
-                child:
-                RaisedButton(
-                    onPressed: (){
-                      ConnectivityServices.checkConnection().then((internet){
-                        if(internet != null && internet){
+              Center(child: Text(error,style: TextStyle(color: Colors.white70,fontStyle: FontStyle.italic),)),
+              Center(
+                child: Container(
+                  padding: EdgeInsets.only(top: 50),
+                  child:
+                  RaisedButton(
+                      onPressed: (){
+                        ConnectivityServices.checkConnection().then((internet){
+                          if(internet != null && internet){
 
-                          if((fullName !=null) && (fullName.length > 0) ){
-                            setState(() {
-                              error = "";
-                              initializeNewUser();
-                            });
+                            if((fullName !=null) && (fullName.length > 0) ){
+                              setState(() {
+                                error = "";
+                                initializeNewUser();
+                              });
+                            }else{
+                              print("please enter a name");
+                              setState(() {
+                                error = "please enter a name";
+                              });
+                            }
+
                           }else{
-                            print("please enter a name");
+                            print("You have no internet connection");
                             setState(() {
-                              error = "please enter a name";
+                              error = "You have no internet connection";
                             });
                           }
+                        });
 
-                        }else{
-                          print("You have no internet connection");
-                          setState(() {
-                            error = "You have no internet connection";
-                          });
-                        }
-                      });
-
-                    },
-                    child: Text('Submit',style: TextStyle(color: Colors.white),),
-                    textColor: Colors.white,
-                    elevation: 7.0,
-                    color: Color.fromRGBO(66, 85, 156, 1),
-                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0))
+                      },
+                      child: Text('Submit',style: TextStyle(color: Colors.white),),
+                      textColor: Colors.white,
+                      elevation: 7.0,
+                      color: Color.fromRGBO(66, 85, 156, 1),
+                      shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0))
+                  ),
                 ),
               ),
             ],
