@@ -30,7 +30,7 @@ class _Notifications extends State<Notifications>{
   Widget build(BuildContext context) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppTheme.appbarColor,
+            backgroundColor: AppTheme.appBarBackgroundColor,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[

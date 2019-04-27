@@ -81,226 +81,225 @@ class _BuildingManagementState extends State<BuildingManagement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
+        centerTitle: true,
         title: Text(pBuilding["buildingName"]),
         backgroundColor: Color.fromRGBO(101, 127, 172, 1),
       ),
       backgroundColor: Color.fromRGBO(101, 127, 172, 1),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: ListView(
-          children: <Widget>[
-            Padding(padding: EdgeInsets.only(top: 20),),
-            Center(
-              child:new Image.asset('images/skyline.png', width: 150.0, height: 150.0),
-            ),
-            Center(
-              child: Row(
+      body: ListView(
+        padding: const EdgeInsets.all(8.0),
+        children: <Widget>[
+          Padding(padding: EdgeInsets.only(top: 20),),
+          Center(
+            child:new Image.asset('images/skyline.png', width: 150.0, height: 150.0),
+          ),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new Text(pBuilding["address"],textAlign: TextAlign.right,style: TextStyle(color: Colors.white),),
+                new Icon(Icons.location_on,color: Colors.white,),
+              ],
+            )
+          ),
+          Padding(padding: EdgeInsets.all(20),),
+          Container(
+              child:Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  new Text(pBuilding["address"],textAlign: TextAlign.right,style: TextStyle(color: Colors.white),),
-                  new Icon(Icons.location_on,color: Colors.white,),
+                  SizedBox(
+                    width: 300,
+                    child:new RaisedButton(
+                      child: new Text('سكان المبنى'),
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(10.0),
+                      ),
+                      color: Colors.white,
+                      onPressed: (){
+                      Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return BuildingTenants(tenantsIDs: pBuilding["tenantsUID"],writeAccess: writeAccess,building:pBuildingID);
+                        },
+                      ));
+                      },
+                    ),
+                  ),
+
                 ],
               )
-            ),
-            Padding(padding: EdgeInsets.all(20),),
-            Container(
-                child:Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 300,
-                      child:new RaisedButton(
-                        child: new Text('سكان المبنى'),
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0),
-                        ),
-                        color: Colors.white,
-                        onPressed: (){
-                        Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return BuildingTenants(tenantsIDs: pBuilding["tenantsUID"],writeAccess: writeAccess,building:pBuildingID);
-                          },
-                        ));
-                        },
-                      ),
-                    ),
-
-                  ],
-                )
-            ),
-            Container(
-                child:Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 300,
-                      child:new RaisedButton(
-                        child: new Text('الفواتير غير المسددة'),
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0),
-                        ),
-                        color: Colors.white,
-
-                        onPressed: (){
-                        Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return new BillManagement(building: pBuilding,buildingID: pBuildingID,writeAccess: writeAccess,);
-                          },
-                        ));
-                        },
-                      ),
-                    ),
-
-                  ],
-                )
-            ),
-            (writeAccess)?Container(
-                child:Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 300,
-                      child:new RaisedButton(
-                        child: new Text('إضافة مقيم'),
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0),
-                        ),
-                        color: Colors.white,
-                        onPressed: (){
-                        Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return new AddTenant(building: pBuildingID,);
-                          },
-                        ));
-                        },
-                      ),
-                    ),
-
-                  ],
-                )
-            ):Container(),
-            (writeAccess)?Container(
-                child:Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 300,
-                      child:new RaisedButton(
-                        child: new Text('أضف فاتورة'),
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0),
-                        ),
-                        color: Colors.white,
-                        onPressed: (){
-                        Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return new AddBill(building: pBuilding,buildingID: pBuildingID,);
-                          },
-                        ));
-                        },
-                      ),
-                    ),
-
-                  ],
-                )
-            ):Container(),
-            Padding(padding: EdgeInsets.all(30)),
-            Container(
-              decoration: new BoxDecoration(
-                borderRadius: new BorderRadius.all(Radius.circular(10)),
-                color: Colors.white,
-              ),
-              padding: EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ),
+          Container(
+              child:Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text("احتياطي الطوارئ"),
-                  displayCurrentReservedText(_reserved, pBuilding["Currency"]),
-                  (writeAccess)?MaterialButton(
-                    padding: EdgeInsets.only(left:1),
-                    child:Icon(Icons.edit),
-                    onPressed: (){
-                      showDialog(context: context,
-                          builder: (_) => new AlertDialog(
-                            title: Text("تغيير احتياطي الطوارئ",textAlign: TextAlign.end,),
-                            content: new TextField(
-                              keyboardType: TextInputType.numberWithOptions(),
-                              controller: reservedController,
-                              maxLength: 20,
-                              textAlign: TextAlign.end,
-                            ),
-                            actions: <Widget>[
-                              new MaterialButton(child: Text("تقديم",),onPressed: (){
-                                if(reservedController.text != null){
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    _reserved = double.parse(reservedController.text);
-                                  });
-                                  FirebaseAuth.instance.currentUser().then((user){
-                                    editReserved(user.uid, pBuildingID, double.parse(reservedController.text));
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pushReplacement(new MaterialPageRoute(
-                                      builder: (BuildContext context) {
-                                        return new BuildingsList();
-                                      },
-                                    ));
-                                  });
+                  SizedBox(
+                    width: 300,
+                    child:new RaisedButton(
+                      child: new Text('الفواتير غير المسددة'),
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(10.0),
+                      ),
+                      color: Colors.white,
 
-                                }
-                              })
-                            ],
+                      onPressed: (){
+                      Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return new BillManagement(building: pBuilding,buildingID: pBuildingID,writeAccess: writeAccess,);
+                        },
+                      ));
+                      },
+                    ),
+                  ),
 
-                          ) );
-                    },
-                  ):Text(""),
                 ],
               )
+          ),
+          (writeAccess)?Container(
+              child:Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: 300,
+                    child:new RaisedButton(
+                      child: new Text('إضافة مقيم'),
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(10.0),
+                      ),
+                      color: Colors.white,
+                      onPressed: (){
+                      Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return new AddTenant(building: pBuildingID,);
+                        },
+                      ));
+                      },
+                    ),
+                  ),
+
+                ],
+              )
+          ):Container(),
+          (writeAccess)?Container(
+              child:Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: 300,
+                    child:new RaisedButton(
+                      child: new Text('أضف فاتورة'),
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(10.0),
+                      ),
+                      color: Colors.white,
+                      onPressed: (){
+                      Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return new AddBill(building: pBuilding,buildingID: pBuildingID,);
+                        },
+                      ));
+                      },
+                    ),
+                  ),
+
+                ],
+              )
+          ):Container(),
+          Padding(padding: EdgeInsets.all(30)),
+          Container(
+            decoration: new BoxDecoration(
+              borderRadius: new BorderRadius.all(Radius.circular(10)),
+              color: Colors.white,
             ),
-            Padding(padding: EdgeInsets.all(20)),
-            (writeAccess)?MaterialButton(
-              padding: EdgeInsets.all(10),
-              child: Text("إزالة المبنى",style: TextStyle(color: Colors.red,),),
-              onPressed: (){
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    // return object of type Dialog
-                    return AlertDialog(
-                      title: new Text("إزالة المبنى",textAlign: TextAlign.right,),
-                      actions: <Widget>[
-                        // usually buttons at the bottom of the dialog
-                        new FlatButton(
-                          child: new Text("لا"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        new FlatButton(
-                          child: new Text("نعم"),
-                          onPressed: () {
-                            FirebaseAuth.instance.currentUser().then((user){
-                              deleteBuilding(user.uid, pBuildingID).then((r){
-                                print(r);
+            padding: EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text("احتياطي الطوارئ"),
+                displayCurrentReservedText(_reserved, pBuilding["Currency"]),
+                (writeAccess)?MaterialButton(
+                  padding: EdgeInsets.only(left:1),
+                  child:Icon(Icons.edit),
+                  onPressed: (){
+                    showDialog(context: context,
+                        builder: (_) => new AlertDialog(
+                          title: Text("تغيير احتياطي الطوارئ",textAlign: TextAlign.end,),
+                          content: new TextField(
+                            keyboardType: TextInputType.numberWithOptions(),
+                            controller: reservedController,
+                            maxLength: 20,
+                            textAlign: TextAlign.end,
+                          ),
+                          actions: <Widget>[
+                            new MaterialButton(child: Text("تقديم",),onPressed: (){
+                              if(reservedController.text != null){
                                 Navigator.of(context).pop();
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pushReplacement(new MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                    return new BuildingsList();
-                                  },
-                                ));
-                              });
-                            });
-                          },
-                        ),
-                      ],
-                    );
+                                setState(() {
+                                  _reserved = double.parse(reservedController.text);
+                                });
+                                FirebaseAuth.instance.currentUser().then((user){
+                                  editReserved(user.uid, pBuildingID, double.parse(reservedController.text));
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pushReplacement(new MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                      return new BuildingsList();
+                                    },
+                                  ));
+                                });
+
+                              }
+                            })
+                          ],
+
+                        ) );
                   },
-                );
-                // call on delete request
-              },
-            ):Container(),
-          ],
-        ),
+                ):Text(""),
+              ],
+            )
+          ),
+          Padding(padding: EdgeInsets.all(20)),
+          (writeAccess)?MaterialButton(
+            padding: EdgeInsets.all(10),
+            child: Text("إزالة المبنى",style: TextStyle(color: Colors.red,),),
+            onPressed: (){
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  // return object of type Dialog
+                  return AlertDialog(
+                    title: new Text("إزالة المبنى",textAlign: TextAlign.right,),
+                    actions: <Widget>[
+                      // usually buttons at the bottom of the dialog
+                      new FlatButton(
+                        child: new Text("لا"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      new FlatButton(
+                        child: new Text("نعم"),
+                        onPressed: () {
+                          FirebaseAuth.instance.currentUser().then((user){
+                            deleteBuilding(user.uid, pBuildingID).then((r){
+                              print(r);
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushReplacement(new MaterialPageRoute(
+                                builder: (BuildContext context) {
+                                  return new BuildingsList();
+                                },
+                              ));
+                            });
+                          });
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+              // call on delete request
+            },
+          ):Container(),
+        ],
       ),
     );
   }

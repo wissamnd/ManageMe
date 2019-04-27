@@ -3,7 +3,6 @@ import 'BillsList.dart';
 import 'BuildingManagemnet/ListOfBuildings.dart';
 import 'Notifications.dart';
 import 'userAccount.dart';
-import 'reports.dart';
 
 class NavigationScreen extends StatelessWidget{
 
@@ -12,7 +11,7 @@ class NavigationScreen extends StatelessWidget{
     return Scaffold(
       backgroundColor: Color.fromRGBO(101, 127, 172, 1),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20,100,20,10),
+        padding: const EdgeInsets.fromLTRB(10,100,10,10),
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -28,7 +27,7 @@ class NavigationScreen extends StatelessWidget{
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.all(30),
+                      padding: EdgeInsets.all(25),
                       decoration: BoxDecoration(
                         borderRadius: new BorderRadius.all(Radius.circular(120)),
                         color: Colors.white,
@@ -53,7 +52,7 @@ class NavigationScreen extends StatelessWidget{
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.all(30),
+                      padding: EdgeInsets.all(25),
                       decoration: BoxDecoration(
                         borderRadius: new BorderRadius.all(Radius.circular(120)),
                         color: Colors.white,
@@ -84,7 +83,7 @@ class NavigationScreen extends StatelessWidget{
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.all(30),
+                      padding: EdgeInsets.all(25),
                       decoration: BoxDecoration(
                         borderRadius: new BorderRadius.all(Radius.circular(120)),
                         color: Colors.white,
@@ -108,7 +107,7 @@ class NavigationScreen extends StatelessWidget{
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.all(30),
+                      padding: EdgeInsets.all(25),
                       decoration: BoxDecoration(
                         borderRadius: new BorderRadius.all(Radius.circular(120)),
                         color: Colors.white,

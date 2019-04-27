@@ -1,13 +1,12 @@
     import 'package:flutter/material.dart';
     import 'package:flutter/services.dart';
-    import 'package:ManageMe/Services/UserServices.dart';
     import 'package:http/http.dart' show get;
     import 'dart:convert';
-    import 'dart:convert';
-    import 'dart:io';
     import 'package:firebase_auth/firebase_auth.dart';
     import 'ListOfBuildings.dart';
-
+    import 'package:ManageMe/Services/ManagerServices.dart';
+    import 'package:ManageMe/theme.dart';
+    // ignore: must_be_immutable
     class AddBill extends StatefulWidget{
       var building;
       var buildingID;
@@ -17,41 +16,14 @@
       _AddBill createState() => _AddBill(buildingID: buildingID,building: building);
     }
 
-
-    Future<String> addABillRequest(String uid,String buildingID,int amount,String description
-        String label,bool repeat,List users,String dueTime) async {
-
-      Map jsonMap = {
-        "amount": amount,
-        "description": description,
-        "label": label,
-        "repeat": repeat,
-        "users": users,
-        "usersWhoPaid":[],
-        "dueTime": dueTime
-      };
-      HttpClient httpClient = new HttpClient();
-      HttpClientRequest request = await httpClient.postUrl(Uri.parse("https://bmsdata-b4ded.firebaseapp.com/api/v1/addBill/?uid="+uid+"&buildingID="+buildingID));
-      request.headers.set('content-type', 'application/json');
-      request.add(utf8.encode(json.encode(jsonMap)));
-      HttpClientResponse response = await request.close();
-      String reply = await response.transform(utf8.decoder).join();
-      httpClient.close();
-      print(reply);
-      return reply;
-    }
-
-
-
-
     class _AddBill extends State<AddBill> {
      static List<String> tenants;
 
     String error="";
     bool repeat = false;
     int numberTenantsInBill=0;
-     var building;
-     var buildingID;
+    var building;               // current building
+    var buildingID;       // current building ID
     var _tenantsNamesMap = {};
     var _tenantsNames = [];
     var _selectedTenants = [];
@@ -61,7 +33,7 @@
     TextEditingController _billLabel= new TextEditingController();
 
 
-
+    // initializes the state
     void _initializeState()async{
       var listOfTenantsUIDS = building["tenantsUID"];
       var tenantsNamesMap = {};
@@ -74,16 +46,18 @@
         tenantsNames.add((await valueMap["fullName"]).toString());
         tenantsNamesMap[(await valueMap["fullName"]).toString()] = listOfTenantsUIDS[i];
       }
-      print(tenantsNames);
-      print(tenantsNamesMap);
       setState(() {
         _tenantsNames= tenantsNames;
         _tenantsNamesMap =tenantsNamesMap;
       });
-
     }
+     @override
+     void initState() {
+       _initializeState();
+       super.initState();
+     }
 
-
+    // constructor
     _AddBill({Key key, @required this.building,@required this.buildingID});
 
       Future _selectDate() async {
@@ -96,21 +70,17 @@
         return picked;
       }
 
-      @override
-      void initState() {
-        _initializeState();
-        super.initState();
-      }
+
       @override
 
       Widget build(BuildContext context) {
        return Scaffold(
          appBar: AppBar(
            title: Text("إضافة فاتورة",style: TextStyle(fontSize: 20,color: Colors.white),),
-           backgroundColor: Color.fromRGBO(101, 127, 172, 0.5),
+           backgroundColor: AppTheme.appBarBackgroundColor,
          ),
 
-         backgroundColor: Color.fromRGBO(101, 127, 172, 1),
+         backgroundColor: AppTheme.appBarBackgroundColor,
          body: (_tenantsNames.length == 0)?Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),) ,):
          Container(
            padding: EdgeInsets.all(10),
@@ -119,15 +89,15 @@
 
                Container(
                  padding: EdgeInsets.symmetric(vertical: 0,horizontal: 40),
-                 child: new RaisedButton(
-                   child: const Text(' المعنيين' ,style: TextStyle(fontSize: 15),),
-                   color: Colors.white,
-                   elevation: 4.0,
-                   splashColor: Color.fromRGBO(101, 127, 172, 1),
+                 child: new FloatingActionButton.extended(
+                   icon: Icon(Icons.add,color: AppTheme.textOne,),
+                   label: const Text(' المعنيين' ,style: TextStyle(fontSize: 15,color: Colors.black),),
+                   backgroundColor: Colors.white,
+                   elevation: 0.0,
+
                    onPressed: () {
                      showDialog (
                        context: context,
-
                        builder: (BuildContext context) {
                          // return object of type Dialog
                          return AlertDialog(
@@ -138,7 +108,6 @@
                              new Container(
                                  child: new Row(
                                    children: <Widget>[
-
                                      new FlatButton( child: new Text("موافق"),
                                        onPressed: () {
                                          Navigator.of(context).pop();
@@ -188,6 +157,9 @@
                      )
                  ),
                ),
+
+
+
                new Container(
                    padding: EdgeInsets.all(10),
                    child: new Column(
@@ -214,6 +186,9 @@
                      ],
                    )
                ),
+
+
+
                new Container(
                  padding: EdgeInsets.all(10),
                  child: Center(
@@ -280,7 +255,7 @@
                      child: new Row(
                        mainAxisAlignment: MainAxisAlignment.center,
                        children: <Widget>[
-                         Text("إعادة كل شهر",textAlign: TextAlign.right,style: TextStyle(color: Colors.white),),
+                         Text("كرر لمدة 3 شهر",textAlign: TextAlign.right,style: TextStyle(color: Colors.white),),
                          new Checkbox(
                              value: repeat,
                              onChanged: (bool value){
@@ -306,23 +281,40 @@
                      setState(() {
                        error = "";
                      });
-//
-                     FirebaseAuth.instance.currentUser().then((user){
-                       addABillRequest(user.uid, buildingID, int.parse(_billAmount.text), _billDescription.text, _billLabel.text,
-                           repeat, _selectedTenants,_billDueDate.month.toString()+"|"+
-                               _billDueDate.day.toString()+"|"+_billDueDate.year.toString()).then((r){
-                                 print(r);
-                                 Navigator.of(context).pop();
-                                 Navigator.of(context).pop();
-                                 Navigator.of(context).pushReplacement(new MaterialPageRoute(
-                                   builder: (BuildContext context) {
-                                     return new BuildingsList();
-                                   },
-                                 ));
-                       });
-                     });
+                     if(repeat){
 
-    //                 Navigator.of(context).pop();
+                       FirebaseAuth.instance.currentUser().then((user){
+                         ManagerServices.addABillRequestRepeat(user.uid, buildingID, int.parse(_billAmount.text), _billDescription.text, _billLabel.text, _selectedTenants,_billDueDate.month.toString()+"|"+
+                             _billDueDate.day.toString()+"|"+_billDueDate.year.toString()).then((r){
+                           print(r);
+                           Navigator.of(context).pop();
+                           Navigator.of(context).pop();
+                           Navigator.of(context).pushReplacement(new MaterialPageRoute(
+                             builder: (BuildContext context) {
+                               return new BuildingsList();
+                             },
+                           ));
+                         });
+                       });
+
+
+                     }else{
+                       // in case no repeat is pressed
+                       FirebaseAuth.instance.currentUser().then((user){
+                         ManagerServices.addABillRequest(user.uid, buildingID, int.parse(_billAmount.text), _billDescription.text, _billLabel.text, _selectedTenants,_billDueDate.month.toString()+"|"+
+                             _billDueDate.day.toString()+"|"+_billDueDate.year.toString()).then((r){
+                           print(r);
+                           Navigator.of(context).pop();
+                           Navigator.of(context).pop();
+                           Navigator.of(context).pushReplacement(new MaterialPageRoute(
+                             builder: (BuildContext context) {
+                               return new BuildingsList();
+                             },
+                           ));
+                         });
+                       });
+
+                     }
                    }else{
                      setState(() {
                        error = "الرجاء إدخال الحقول المفقودة";
@@ -348,7 +340,8 @@
 
     }
 
-
+    // this dialog is used to show the box with tenants and checkboxes
+    // ignore: must_be_immutable
     class DialogContent extends StatefulWidget {
       var tenantsNamesMap;
       var tenantsNames;
@@ -383,7 +376,9 @@
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Text(name),
+                        Expanded(
+                          child: Text(name) ,
+                        ),
                         Checkbox(
                             value: selectedTenants.contains(tenantsNamesMap[name]),
                             onChanged: (bool value){

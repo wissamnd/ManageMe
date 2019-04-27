@@ -31,10 +31,6 @@ class _HomeState extends State<Nav> {
             icon: Icon(Icons.home),
             title:Text("الصفحة الرئيسية"),
           ),
-//          new BottomNavigationBarItem(
-//            icon: Icon(Icons.mail),
-//            title: Text("الرسائل"),
-//          ),
           new BottomNavigationBarItem(
             icon: Icon(Icons.person),
             title: Text("الملف الشخصي"),

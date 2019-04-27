@@ -37,7 +37,6 @@ Future getAllBuildingUnpaidBills(building) async{
        bills.add(bill);
     });
   }
-  print(bills);
   return bills;
 }
 
@@ -109,7 +108,7 @@ class _BillManagementState extends State<BillManagement> {
     return Scaffold(
       appBar: AppBar(
         title: Text("الفواتير غير المسددة"),
-        backgroundColor: AppTheme.appbarColor,
+        backgroundColor: AppTheme.appBarBackgroundColor,
       ),
       backgroundColor: AppTheme.backgroundColor,
       body: ListView(
@@ -119,10 +118,11 @@ class _BillManagementState extends State<BillManagement> {
               :Column(
           children: _bills
                   .map((element) =>
+          (element != {})?
           (element["usersWhoPaid"].length == element["users"].length)?
           Container():
           new Padding(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(10),
                 child: new Container(
                   padding: EdgeInsets.all(20),
                   decoration: new BoxDecoration(
@@ -198,7 +198,9 @@ class _BillManagementState extends State<BillManagement> {
                                               onPressed: () {
                                           FirebaseAuth.instance.currentUser().then((user){
                                             deleteBill(user.uid, element["uid"], buildingID).then((r){
-                                              print(r);
+                                              setState(() {
+                                                _bills.remove(element);
+                                              });
                                               Navigator.of(context).pop();
                                               Navigator.of(context).pop();
                                               Navigator.of(context).pop();
@@ -225,8 +227,7 @@ class _BillManagementState extends State<BillManagement> {
                               children: <Widget>[
                                 new Text((new DateTime(int.parse(element["dueTime"].split("|")[2]),int.parse(element["dueTime"].split("|")[0]),int.parse(element["dueTime"].split("|")[1]),0,0,0,0)).day.toString(),
                                   style: TextStyle(fontSize: 20),),
-                                (element["repeat"])?new Text(DateServices.getMonthName((new DateTime(int.parse(element["dueTime"].split("|")[2]),int.parse(element["dueTime"].split("|")[0]),int.parse(element["dueTime"].split("|")[1]),0,0,0,0)).month),
-                                  style: TextStyle(fontSize: 20),):new Text(DateServices.getMonthName((DateTime.now().month)),
+                                new Text(DateServices.getMonthName((new DateTime(int.parse(element["dueTime"].split("|")[2]),int.parse(element["dueTime"].split("|")[0]),int.parse(element["dueTime"].split("|")[1]),0,0,0,0)).month),
                                   style: TextStyle(fontSize: 20),),
                                 new Text((new DateTime(int.parse(element["dueTime"].split("|")[2]),int.parse(element["dueTime"].split("|")[0]),int.parse(element["dueTime"].split("|")[1]),0,0,0,0)).year.toString(),
                                   style: TextStyle(fontSize: 20),),
@@ -239,7 +240,7 @@ class _BillManagementState extends State<BillManagement> {
                     ),
                   ),
                 ),
-              ))
+              ):Container())
                   .toList()),
         ],
       ),

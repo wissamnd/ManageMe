@@ -75,7 +75,7 @@ class HomeScreenState extends State<HomeScreen> {
             )
           ],
             title:Text(' خلاصة شهر '+ DateServices.getMonthName(_currentDate.month),),
-          backgroundColor: AppTheme.appbarColor ,
+          backgroundColor: AppTheme.appBarBackgroundColor ,
         ),
 
         backgroundColor: AppTheme.backgroundColor,

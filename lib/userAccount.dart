@@ -1,4 +1,3 @@
-
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -8,6 +7,7 @@ import 'package:http/http.dart' show get;
 import 'dart:convert';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'theme.dart';
 
 class UserAccount extends StatefulWidget{
     @override
@@ -133,7 +133,7 @@ class _UserAccountState extends State<UserAccount>{
        appBar: new AppBar(
          centerTitle: true,
          title: Text("إدارة الملف الشخصي",style: TextStyle(fontSize: 20,color: Colors.white),),
-         backgroundColor: Color.fromRGBO(101, 127, 172, 0.5),
+         backgroundColor: AppTheme.appBarBackgroundColor,
          actions: <Widget>[
            PopupMenuButton<Options>(
              onSelected: (Options result) {
@@ -165,7 +165,7 @@ class _UserAccountState extends State<UserAccount>{
            )
          ],
        ),
-       backgroundColor: Color.fromRGBO(101, 127, 172, 1),
+       backgroundColor: AppTheme.backgroundColor,
        body: new Container(
 
          child:  new Center(

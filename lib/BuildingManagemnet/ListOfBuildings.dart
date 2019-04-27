@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' show get;
 import 'dart:convert';
 import 'package:tuple/tuple.dart';
-import 'package:intl/intl.dart';
 import 'BuildingManagemnet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'CreateBuilding.dart';
@@ -30,48 +29,12 @@ Future getUserBuildings(String uid) async {
   return t;
 }
 
-// get the total number of bills for a specific building given its id
-Future getTotalBills(String uid,String buildingID) async {
-  DateTime now = DateTime.now();
-  var month = now.month;
-  var year =  now.year;
-  var total = 0;
-  var result = await get('https://bmsdata-b4ded.firebaseapp.com/api/v1/getMyMonthlyBuildingBills?uid='+uid+'&buildingID='+buildingID+'&month='+month.toString()+'&year='+year.toString());
-  var listOfBills = json.decode(result.body);
-  for(var i = 0; i < listOfBills.length;i++ ){
-    total =  total + await ( listOfBills[i]["amount"]) ;
-  }
-  return total;
-}
-
-// return a map with each building name and corresponding bills amount
-Future getBuildingTotalAmountOfBills(String uid,List buildingsID,List buildings)async{
-  Map currentBillsTotalMap = {};
-   for(var i =0; i < buildingsID.length;i++){
-    await getTotalBills(uid, buildingsID[i]).then((number){
-      currentBillsTotalMap[buildings[i]["buildingName"]] =  number ;
-    });
-  }
-  return currentBillsTotalMap;
-}
-
-// display all amount of bills for each building
-Widget displayCurrentBillsText(Map currentBillsMap, buildingName,String currency){
-
-  if(currency == "USD"){
-    return (currentBillsMap.length >0 )?Text( new NumberFormat("###,###.#", "en_US").format(currentBillsMap[buildingName]).toString() + " \$"):Text("");
-  }else{
-    return (currentBillsMap.length >0 )?Text(new NumberFormat("###,###", "en_US").format(currentBillsMap[buildingName]).toString()+ "  L.L"):Text("");
-  }
-
-}
 
 
 
 class BuildingsListState extends State<BuildingsList> {
   var _allBuildings = [];
   var _allBuildingsIDs = [];
-  Map _currentBillsTotalMap = {};
   var currentPressed;
   var currentPressedID;
   var uid ="";
@@ -93,11 +56,6 @@ class BuildingsListState extends State<BuildingsList> {
           _allBuildings =tuple.item1;
           _allBuildingsIDs = tuple.item2;
         });
-        getBuildingTotalAmountOfBills(user.uid, tuple.item2, tuple.item1).then((map){
-          setState(() {
-            _currentBillsTotalMap =map;
-          });
-        });
       });
     });
   }
@@ -108,9 +66,9 @@ class BuildingsListState extends State<BuildingsList> {
       key: mScaffoldState,
       appBar: AppBar(
         title: Text("البنايات"),
-        backgroundColor: Color.fromRGBO(101, 127, 172, 1),
+        backgroundColor: AppTheme.appBarBackgroundColor,
       ),
-        backgroundColor: Color.fromRGBO(101, 127, 172, 1),
+        backgroundColor: AppTheme.backgroundColor,
       body:(_allBuildings.length ==0)? Center(child:CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),)):
         ListView(
         children: <Widget>[
@@ -166,9 +124,6 @@ class BuildingsListState extends State<BuildingsList> {
                             Text("عدد السكان: "+ building["tenantsUID"].length.toString(),style: TextStyle(fontSize: 15),textAlign: TextAlign.right,),
                             Text("شاغر:" + (building["numberofApartments"]- building["tenantsUID"].length).toString(),style: TextStyle(color: Colors.grey),textAlign: TextAlign.right,),
                             Padding(padding: EdgeInsets.all(5),),
-                            Text("مقدار الفاتورة التي يجب عليك دفعها",style: TextStyle(fontSize: 15),textAlign: TextAlign.right,),
-                            displayCurrentBillsText(_currentBillsTotalMap, building["buildingName"],building["Currency"])
-
                             ],
                           ),
                         ),
