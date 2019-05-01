@@ -38,6 +38,7 @@ class BuildingsListState extends State<BuildingsList> {
   var currentPressed;
   var currentPressedID;
   var uid ="";
+  bool _isLoading = false;
   final GlobalKey<ScaffoldState> mScaffoldState = new GlobalKey<ScaffoldState>();
 
   void accessDeniedSnackBar() {
@@ -53,6 +54,7 @@ class BuildingsListState extends State<BuildingsList> {
       });
       getUserBuildings(user.uid).then((tuple){
         setState(() {
+          _isLoading = true;
           _allBuildings =tuple.item1;
           _allBuildingsIDs = tuple.item2;
         });
@@ -69,7 +71,7 @@ class BuildingsListState extends State<BuildingsList> {
         backgroundColor: AppTheme.appBarBackgroundColor,
       ),
         backgroundColor: AppTheme.backgroundColor,
-      body:(_allBuildings.length ==0)? Center(child:CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),)):
+      body:(!_isLoading)? Center(child:CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),)):
         ListView(
         children: <Widget>[
           Padding(

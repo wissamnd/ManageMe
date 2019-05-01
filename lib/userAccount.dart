@@ -23,6 +23,7 @@ class _UserAccountState extends State<UserAccount>{
   var urlImage = "http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png";
   var phoneNumber = "";
   var traveling = false;
+  bool _loading = true;
   TextEditingController fullNameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
   TextEditingController aboutMeController = new TextEditingController();
@@ -35,6 +36,7 @@ class _UserAccountState extends State<UserAccount>{
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = reference.putFile(avatarImageFile);
     StorageTaskSnapshot storageTaskSnapshot;
+
 
     uploadTask.onComplete.then((value) {
       if (value.error == null) {
@@ -62,28 +64,28 @@ class _UserAccountState extends State<UserAccount>{
   }
 
   Widget _fullNameDisplay(){
-    if(fullName.length == 0){
+    if(_loading){
       return new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),);
     }else{
       return Text(fullName,style: TextStyle(color: Colors.white,fontSize: 30),);
     }
   }
   Widget _phoneNumberDisplay(){
-    if(phoneNumber.length == 0){
+    if(_loading){
       return new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),);
     }else{
       return Text(phoneNumber,style: TextStyle(fontSize: 20,color: Colors.white),);
     }
   }
   Widget _emailDisplay(){
-    if(email.length == 0){
+    if(_loading){
       return new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),);
     }else{
       return Text(email,style: TextStyle(fontSize: 20,color: Colors.white),);
     }
   }
   Widget _aboutMeDisplay(){
-    if(aboutMe.length == 0){
+    if(_loading){
       return new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),);
     }else{
       return Text(aboutMe,style: TextStyle(fontSize: 20,color: Colors.white),);
@@ -101,6 +103,7 @@ class _UserAccountState extends State<UserAccount>{
       urlImage = valueMap["photo"];
       phoneNumber = valueMap["phonenumber"];
       traveling = valueMap["traveling"];
+      _loading = false;
     });
   }
   // patching user data using from the database

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ManageMe/homeNavigation.dart';
 import 'package:ManageMe/Objects/User.dart';
 import 'package:ManageMe/Services/ConnectivityServices.dart';
-
+import 'package:ManageMe/theme.dart';
 
 
 class NewUser extends StatefulWidget{
@@ -30,8 +30,9 @@ class _NewUser extends State<NewUser>{
   Widget build(BuildContext context) {
 
     return Scaffold(
-        appBar: new AppBar(title: Text("fullname"),),
-        backgroundColor: Color.fromRGBO(101, 127, 172, 1),
+        appBar: new AppBar(title: Text("fullname"),
+        backgroundColor: AppTheme.appBarBackgroundColor,),
+        backgroundColor: AppTheme.backgroundColor,
         body: Container(
           padding: EdgeInsets.all(10.0),
           child:ListView(
